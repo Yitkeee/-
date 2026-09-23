@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>(function(){function fmt(a){if(a instanceof Error)return a.message;if(typeof a==="object"&&a!==null){try{return JSON.stringify(a)}catch(e){return String(a)}}return String(a)}function send(t,m,l){try{parent.postMessage({__stc:1,type:t,msg:m,line:l},"*")}catch(e){}}["log","info","warn","error"].forEach(function(m){var o=console[m];console[m]=function(){send(m,Array.prototype.map.call(arguments,fmt).join(" "));if(o)o.apply(console,arguments)}});window.addEventListener("error",function(e){send("error",e.message,e.lineno)});window.addEventListener("unhandledrejection",function(e){send("error","Promise: "+fmt(e.reason))});})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Приглашение 💌</title>
+<style>
+:root{
+  --pink:#ff6b9d;
+  --pink-dark:#ff4d85;
+  --pink-soft:#ffe5ec;
+  --blue:#7dd3fc;
+  --cream:#fff9fb;
+  --text:#5b4b5f;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  display:flex;justify-content:center;align-items:center;
+  min-height:100vh;
+  background:linear-gradient(160deg,#ffe5ec 0%,#ffd0e2 60%,#ffb8d0 100%);
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  overflow-x:hidden;text-align:center;padding:20px;position:relative;
+}
+
+.hearts-bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
+.heart{position:absolute;bottom:-60px;animation:floatUp linear infinite;user-select:none;opacity:.55;}
+@keyframes floatUp{
+  0%{transform:translateY(0);opacity:0;}
+  15%{opacity:.6;}
+  90%{opacity:.3;}
+  100%{transform:translateY(-118vh);opacity:0;}
+}
+
+.container{
+  position:relative;z-index:1;background:#fff;
+  padding:32px 28px 28px;border-radius:24px;
+  box-shadow:0 18px 44px rgba(255,107,157,.2), 0 4px 12px rgba(255,107,157,.08);
+  max-width:440px;width:100%;
+  animation:cardIn .55s cubic-bezier(.34,1.4,.64,1) both;
+  transition:opacity .3s ease, transform .3s cubic-bezier(.4,0,.2,1);
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+.container.swapping{opacity:0;transform:translateY(10px);}
+
+.progress{display:flex;justify-content:center;gap:7px;margin-bottom:14px;}
+.dot{width:7px;height:7px;border-radius:50%;background:#ffd6e7;transition:all .35s ease;}
+.dot.active{background:var(--pink);width:22px;border-radius:4px;}
+
+.mascot-scene{
+  position:relative;width:180px;height:180px;
+  margin:0 auto 16px;
+  display:flex;align-items:center;justify-content:center;
+}
+.mascot-glow{
+  position:absolute;inset:12px;border-radius:50%;
+  background:radial-gradient(circle, #ffe0ec 0%, #ffeaf2 45%, transparent 72%);
+  animation:glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse{
+  0%,100%{transform:scale(.92);opacity:.75;}
+  50%{transform:scale(1.05);opacity:1;}
+}
+.mascot-ring{
+  position:absolute;inset:6px;border-radius:50%;
+  border:2px dashed #ffc6d9;
+  animation:ringSpin 18s linear infinite;
+  opacity:.7;
+}
+@keyframes ringSpin{to{transform:rotate(360deg);}}
+
+.mascot-emoji{
+  position:relative;z-index:2;
+  font-size:104px;line-height:1;
+  filter:drop-shadow(0 8px 16px rgba(255,107,157,.35));
+  animation:heartbeat 2.2s ease-in-out infinite;
+  transition:transform .5s cubic-bezier(.34,1.5,.64,1);
+  user-select:none;
+}
+@keyframes heartbeat{
+  0%,100%{transform:scale(1) translateY(0);}
+  25%{transform:scale(1.06) translateY(-4px);}
+  50%{transform:scale(1) translateY(0);}
+  75%{transform:scale(1.06) translateY(-4px);}
+}
+
+.orbit{
+  position:absolute;top:50%;left:50%;
+  font-size:20px;pointer-events:none;
+  transform-origin:0 0;
+  animation:orbitSpin 7s linear infinite;
+  filter:drop-shadow(0 2px 4px rgba(255,107,157,.25));
+}
+.orbit.o1{animation-delay:0s;}
+.orbit.o2{animation-delay:-1.75s;font-size:16px;}
+.orbit.o3{animation-delay:-3.5s;font-size:18px;}
+.orbit.o4{animation-delay:-5.25s;font-size:14px;}
+@keyframes orbitSpin{
+  0%{transform:translate(-50%,-50%) rotate(0deg) translateX(78px) rotate(0deg) scale(1);opacity:.9;}
+  50%{opacity:1;transform:translate(-50%,-50%) rotate(180deg) translateX(78px) rotate(-180deg) scale(1.15);}
+  100%{transform:translate(-50%,-50%) rotate(360deg) translateX(78px) rotate(-360deg) scale(1);opacity:.9;}
+}
+
+.mascot-sparkle{
+  position:absolute;font-size:14px;pointer-events:none;
+  animation:sparkleUp 2.8s ease-out infinite;
+  opacity:0;
+}
+.mascot-sparkle.s1{left:50%;bottom:28px;animation-delay:0s;}
+.mascot-sparkle.s2{left:38%;bottom:34px;animation-delay:.7s;}
+.mascot-sparkle.s3{left:62%;bottom:34px;animation-delay:1.4s;}
+.mascot-sparkle.s4{left:50%;bottom:42px;animation-delay:2.1s;}
+@keyframes sparkleUp{
+  0%{transform:translate(-50%,0) scale(.6);opacity:0;}
+  20%{opacity:1;}
+  100%{transform:translate(-50%,-70px) scale(1.15);opacity:0;}
+}
+
+h1{
+  color:var(--pink-dark);font-size:clamp(19px,5.2vw,22px);
+  line-height:1.4;margin-bottom:8px;font-weight:700;
+}
+.subtitle{
+  color:#a68aa0;font-size:15px;line-height:1.5;
+  margin-bottom:20px;min-height:22px;transition:color .3s;
+}
+
+.buttons{
+  display:flex;justify-content:center;align-items:center;
+  gap:18px;min-height:78px;position:relative;
+}
+button{
+  font-family:inherit;padding:14px 28px;font-size:17px;font-weight:600;
+  border:none;border-radius:50px;cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.05);
+  transition:background-color .3s, opacity .35s, box-shadow .3s;
+  -webkit-tap-highlight-color:transparent;
+}
+#yesBtn{
+  background:linear-gradient(135deg,#7dd3fc,#38bdf8);
+  color:#fff;z-index:10;
+  transition:transform .3s cubic-bezier(.34,1.5,.64,1), box-shadow .3s;
+  box-shadow:0 8px 20px rgba(56,189,248,.3);
+}
+#yesBtn:hover{box-shadow:0 10px 24px rgba(56,189,248,.45);}
+#noBtn{
+  background:linear-gradient(135deg,#ff8fb1,#ff6b9d);
+  color:#fff;position:absolute;right:26px;z-index:20;
+  box-shadow:0 8px 20px rgba(255,107,157,.3);
+  transition:left .18s ease-out, top .18s ease-out,
+             transform .25s cubic-bezier(.34,1.5,.64,1),
+             background-color .3s, opacity .4s;
+}
+#noBtn:hover{background:#ff4d85;}
+
+/* ---------- экран «Почему не хочешь?» ---------- */
+.why-block{display:none;text-align:left;}
+.why-block h2{
+  color:var(--pink-dark);font-size:17px;text-align:center;
+  margin-bottom:6px;font-weight:700;
+}
+.why-block p{
+  color:#a68aa0;font-size:14px;text-align:center;
+  margin-bottom:14px;line-height:1.4;
+}
+.why-block textarea{
+  width:100%;min-height:100px;padding:12px 16px;
+  border:2px solid var(--pink-soft);border-radius:14px;
+  font-size:15px;font-family:inherit;resize:vertical;
+  outline:none;background:var(--cream);color:var(--text);
+  transition:border-color .25s, box-shadow .25s;
+}
+.why-block textarea:focus{
+  border-color:var(--pink);background:#fff;
+  box-shadow:0 0 0 4px rgba(255,107,157,.12);
+}
+#sendWhy{
+  background:linear-gradient(135deg,#ff8fb1,#ff4d85);
+  color:#fff;width:100%;margin-top:14px;
+  box-shadow:0 8px 20px rgba(255,77,133,.3);
+}
+#sendWhy:hover{box-shadow:0 10px 26px rgba(255,77,133,.45);}
+#reconsider{
+  background:#fff0f5;color:var(--pink-dark);
+  width:100%;margin-top:10px;
+  border:2px solid var(--pink-soft);box-shadow:none;
+}
+#reconsider:hover{background:var(--pink-soft);}
+
+/* ---------- форма ---------- */
+.details-form{display:none;text-align:left;}
+.details-form label{
+  display:block;font-weight:600;color:#8a7290;
+  margin:16px 0 6px;font-size:14px;letter-spacing:.3px;
+}
+.details-form input,.details-form select{
+  width:100%;padding:12px 16px;border:2px solid var(--pink-soft);
+  border-radius:14px;font-size:16px;font-family:inherit;
+  outline:none;background:var(--cream);color:var(--text);
+  transition:border-color .25s, background-color .25s, box-shadow .25s;
+  -webkit-appearance:none;appearance:none;
+}
+.details-form select{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ff6b9d' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat;background-position:right 16px center;
+  padding-right:42px;
+}
+.details-form input:focus,.details-form select:focus{
+  border-color:var(--pink);background:#fff;
+  box-shadow:0 0 0 4px rgba(255,107,157,.12);
+}
+#activityCustom{margin-top:10px;display:none;}
+#submitDetails{
+  background:linear-gradient(135deg,#ff8fb1,#ff4d85);
+  color:#fff;width:100%;margin-top:24px;
+  box-shadow:0 8px 20px rgba(255,77,133,.3);
+  transition:transform .25s ease, box-shadow .3s;
+}
+#submitDetails:hover{box-shadow:0 10px 26px rgba(255,77,133,.45);transform:translateY(-2px);}
+#submitDetails:active{transform:scale(.97);}
+
+.final-text{text-align:left;}
+.final-title{
+  font-weight:700;color:var(--pink-dark);font-size:17px;
+  margin-bottom:12px;text-align:center;
+}
+.final-row{
+  background:#fff7fa;border-radius:14px;padding:12px 16px;
+  margin-bottom:9px;font-size:15px;color:var(--text);
+  line-height:1.4;border:1.5px dashed #ffd6e7;
+}
+.final-note{
+  text-align:center;font-style:italic;color:#a68aa0;
+  font-size:15px;margin-top:14px;line-height:1.5;
+}
+
+.toast{
+  position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);
+  background:#5b4b5f;color:#fff;padding:12px 22px;border-radius:14px;
+  font-size:14px;font-weight:600;opacity:0;
+  transition:all .35s cubic-bezier(.34,1.5,.64,1);
+  z-index:999;pointer-events:none;
+  box-shadow:0 10px 28px rgba(91,75,95,.35);
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+.confetti{
+  position:fixed;top:-20px;font-size:20px;pointer-events:none;
+  z-index:998;animation:fall linear forwards;
+}
+@keyframes fall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1;}
+  100%{transform:translateY(110vh) rotate(540deg);opacity:0;}
+}
+
+.click-heart{
+  position:fixed;pointer-events:none;font-size:22px;
+  animation:popUp .9s ease-out forwards;z-index:997;
+}
+@keyframes popUp{
+  0%{transform:translate(-50%,-50%) scale(.3);opacity:1;}
+  100%{transform:translate(-50%,-110%) scale(1.3);opacity:0;}
+}
+
+.fade-in{animation:fadeUp .45s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+@media (max-width:420px){
+  .container{padding:26px 20px 22px;border-radius:20px;}
+  .mascot-scene{width:160px;height:160px;}
+  .mascot-emoji{font-size:92px;}
+  .orbit{animation-duration:8s;}
+  @keyframes orbitSpin{
+    0%{transform:translate(-50%,-50%) rotate(0deg) translateX(66px) rotate(0deg) scale(1);opacity:.9;}
+    50%{opacity:1;transform:translate(-50%,-50%) rotate(180deg) translateX(66px) rotate(-180deg) scale(1.15);}
+    100%{transform:translate(-50%,-50%) rotate(360deg) translateX(66px) rotate(-360deg) scale(1);opacity:.9;}
+  }
+  button{font-size:16px;padding:12px 22px;}
+}
+</style>
+</head>
+<body>
+
+<div class="hearts-bg" id="heartsBg"></div>
+
+<div class="container" id="card">
+  <div class="progress" id="progress">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="mascot-scene">
+    <div class="mascot-glow"></div>
+    <div class="mascot-ring"></div>
+
+    <span class="orbit o1">💕</span>
+    <span class="orbit o2">✨</span>
+    <span class="orbit o3">🌸</span>
+    <span class="orbit o4">💗</span>
+
+    <span class="mascot-emoji" id="mascotEmoji">💌</span>
+
+    <span class="mascot-sparkle s1">💖</span>
+    <span class="mascot-sparkle s2">✨</span>
+    <span class="mascot-sparkle s3">💕</span>
+    <span class="mascot-sparkle s4">💗</span>
+  </div>
+
+  <h1 id="question">Пойдёшь со мной на свидание? ☕✨</h1>
+  <p class="subtitle" id="subtitle">Только ты и я. Никаких компаний 😉</p>
+
+  <div class="buttons" id="btnContainer">
+    <button id="yesBtn">Да! 💖</button>
+    <button id="noBtn">Нет</button>
+  </div>
+
+  <!-- Экран «Почему не хочешь?» -->
+  <div class="why-block" id="whyBlock">
+    <h2>Почему не хочешь? 🥺</h2>
+    <p>Расскажи честно — мне правда важно понять 💭</p>
+    <textarea id="whyInput" placeholder="Например: стесняюсь, занята, не готова..."></textarea>
+    <button id="sendWhy">Отправить 💌</button>
+    <button id="reconsider">Ладно, уговорил! 💖</button>
+  </div>
+
+  <div class="details-form" id="detailsForm">
+    <label for="dateInput">📅 Выбери удобный день:</label>
+    <input type="date" id="dateInput">
+
+    <label for="timeInput">🕒 Подходящее время:</label>
+    <input type="time" id="timeInput" value="18:00">
+
+    <label for="activityInput">✨ Как проведём время?</label>
+    <select id="activityInput">
+      <option value="🌅 Романтичная прогулка по набережной">🌅 Романтичная прогулка по набережной</option>
+      <option value="☕ Уютный кофе в красивом месте">☕ Уютный кофе в красивом месте</option>
+      <option value="🍿 Поход в кино на вечерний сеанс">🍿 Поход в кино на вечерний сеанс</option>
+      <option value="🎨 Совместный мастер-класс или выставка">🎨 Совместный мастер-класс или выставка</option>
+      <option value="✨ Встреча заката на панорамной крыше">✨ Встреча заката на панорамной крыше</option>
+      <option value="🎲 Ламповый вечер настолок или фильмов">🎲 Ламповый вечер настолок или фильмов</option>
+      <option value="🎯 Секретный план-сюрприз от меня">🎯 Секретный план-сюрприз от меня</option>
+      <option value="__other__">✏️ Другое (напишу сама)</option>
+    </select>
+    <input type="text" id="activityCustom" placeholder="Напиши, чего бы тебе хотелось...">
+
+    <button id="submitDetails">Готово! Отправить ❤️</button>
+  </div>
+
+  <div id="finalBlock" style="display:none"></div>
+</div>
+
+<script>
+/* ============================================================
+   НАСТРОЙКИ
+   ============================================================ */
+const SETTINGS = {
+  herName: "",
+  myName:  "",
+  telegram: {
+    botToken: "8811712313:AAEA0VhxTqImCh3ZCEa01P2w3bCSO8aqqmU",
+    chatId:   "5635623522"
+  }
+};
+
+/* ============================================================
+   ЭЛЕМЕНТЫ
+   ============================================================ */
+const card         = document.getElementById('card');
+const question     = document.getElementById('question');
+const subtitle     = document.getElementById('subtitle');
+const mascotEmoji  = document.getElementById('mascotEmoji');
+const btnContainer = document.getElementById('btnContainer');
+const yesBtn       = document.getElementById('yesBtn');
+const noBtn        = document.getElementById('noBtn');
+const whyBlock     = document.getElementById('whyBlock');
+const whyInput     = document.getElementById('whyInput');
+const sendWhyBtn   = document.getElementById('sendWhy');
+const reconsiderBtn= document.getElementById('reconsider');
+const detailsForm  = document.getElementById('detailsForm');
+const submitBtn    = document.getElementById('submitDetails');
+const finalBlock   = document.getElementById('finalBlock');
+const dateInput    = document.getElementById('dateInput');
+const timeInput    = document.getElementById('timeInput');
+const activityInput= document.getElementById('activityInput');
+const activityCustom=document.getElementById('activityCustom');
+const progressDots = document.querySelectorAll('.dot');
+
+function setProgress(step){
+  progressDots.forEach((d,i)=> d.classList.toggle('active', i <= step));
+}
+
+if (SETTINGS.herName){
+  question.textContent = `${SETTINGS.herName}, пойдёшь со мной на свидание? ☕✨`;
+}
+
+/* ============================================================
+   1. ФОНОВЫЕ СЕРДЕЧКИ
+   ============================================================ */
+(function createHearts(){
+  const bg = document.getElementById('heartsBg');
+  const emojis = ['💖','💕','🌸','💗'];
+  const count = window.innerWidth < 500 ? 7 : 12;
+  for (let i = 0; i < count; i++){
+    const s = document.createElement('span');
+    s.className = 'heart';
+    s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.fontSize = (11 + Math.random() * 14) + 'px';
+    s.style.animationDuration = (12 + Math.random() * 10) + 's';
+    s.style.animationDelay = (-Math.random() * 18) + 's';
+    bg.appendChild(s);
+  }
+})();
+
+/* ============================================================
+   2. КЛИК-СЕРДЕЧКИ
+   ============================================================ */
+card.addEventListener('click', (e) => {
+  if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT'
+      || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+  spawnClickHeart(e.clientX, e.clientY);
+});
+card.addEventListener('touchstart', (e) => {
+  const t = e.touches[0];
+  if (!t) return;
+  if (e.target.closest('button, input, select, textarea')) return;
+  spawnClickHeart(t.clientX, t.clientY);
+}, { passive:true });
+
+function spawnClickHeart(x, y){
+  const h = document.createElement('span');
+  h.className = 'click-heart';
+  h.textContent = ['💖','💗','💕'][Math.floor(Math.random()*3)];
+  h.style.left = x + 'px';
+  h.style.top  = y + 'px';
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(), 900);
+}
+
+/* ============================================================
+   3. КНОПКА «НЕТ», КОТОРАЯ УБЕГАЕТ
+   После 5 попыток → экран «Почему не хочешь?»
+   ============================================================ */
+const NO_TEXTS = ["Нет", "Точно нет?", "Подумай 🥺", "Ну пожалуйста…", "Уверена?", "Я старался 😢"];
+const MAX_NO = 5;
+let noCount = 0;
+let noLocked = false;
+let yesScale = 1;
+
+function getViewport(){
+  const vv = window.visualViewport;
+  return {
+    vw:   vv ? vv.width      : window.innerWidth,
+    vh:   vv ? vv.height     : window.innerHeight,
+    offL: vv ? vv.offsetLeft : 0,
+    offT: vv ? vv.offsetTop  : 0
+  };
+}
+
+function moveNo(){
+  if (noLocked) return;
+  noCount++;
+
+  /* после MAX_NO попыток → показываем экран «Почему не хочешь?» */
+  if (noCount >= MAX_NO){
+    noLocked = true;
+    noBtn.style.opacity = '0';
+    noBtn.style.pointerEvents = 'none';
+    setTimeout(() => { noBtn.style.display = 'none'; }, 300);
+
+    swap(() => {
+      btnContainer.style.display = 'none';
+      whyBlock.style.display = 'block';
+      whyBlock.classList.add('fade-in');
+      mascotEmoji.textContent = '🥺';
+      question.textContent = 'Может, расскажешь, в чём дело? 💭';
+      subtitle.textContent = 'Я не обижусь, честно ✨';
+      subtitle.style.color = '#a68aa0';
+    });
+    return;
+  }
+
+  noBtn.textContent = NO_TEXTS[Math.min(noCount, NO_TEXTS.length - 1)];
+
+  if (noBtn.style.position !== 'fixed'){
+    const r = noBtn.getBoundingClientRect();
+    document.body.appendChild(noBtn);
+    noBtn.style.position = 'fixed';
+    noBtn.style.right = 'auto';
+    noBtn.style.left = r.left + 'px';
+    noBtn.style.top  = r.top  + 'px';
+  }
+
+  const pad = 12;
+  const w = noBtn.offsetWidth;
+  const h = noBtn.offsetHeight;
+  const { vw, vh, offL, offT } = getViewport();
+
+  const minX = offL + pad;
+  const maxX = offL + vw - w - pad;
+  const minY = offT + pad;
+  const maxY = offT + vh - h - pad;
+
+  const rangeX = Math.max(0, maxX - minX);
+  const rangeY = Math.max(0, maxY - minY);
+
+  const yesRect = yesBtn.getBoundingClientRect();
+
+  let x = minX, y = minY;
+  for (let i = 0; i < 24; i++){
+    const tx = minX + Math.random() * rangeX;
+    const ty = minY + Math.random() * rangeY;
+    const overlaps = !(tx + w < yesRect.left - 12 || tx > yesRect.right + 12 ||
+                       ty + h < yesRect.top  - 12 || ty > yesRect.bottom + 12);
+    x = tx; y = ty;
+    if (!overlaps) break;
+  }
+
+  x = Math.min(Math.max(x, minX), Math.max(minX, maxX));
+  y = Math.min(Math.max(y, minY), Math.max(minY, maxY));
+
+  noBtn.style.left = x + 'px';
+  noBtn.style.top  = y + 'px';
+
+  yesScale = Math.min(yesScale + 0.15, 1.7);
+  yesBtn.style.transform = `scale(${yesScale})`;
+
+  if (navigator.vibrate) navigator.vibrate(12);
+}
+
+function keepNoInView(){
+  if (noBtn.style.position !== 'fixed' || noLocked) return;
+  const pad = 12;
+  const { vw, vh, offL, offT } = getViewport();
+  const maxX = offL + vw - noBtn.offsetWidth  - pad;
+  const maxY = offT + vh - noBtn.offsetHeight - pad;
+  const curX = parseFloat(noBtn.style.left) || (offL + pad);
+  const curY = parseFloat(noBtn.style.top)  || (offT + pad);
+  noBtn.style.left = Math.min(Math.max(curX, offL + pad), Math.max(offL + pad, maxX)) + 'px';
+  noBtn.style.top  = Math.min(Math.max(curY, offT + pad), Math.max(offT + pad, maxY)) + 'px';
+}
+window.addEventListener('resize', keepNoInView);
+window.addEventListener('orientationchange', () => setTimeout(keepNoInView, 250));
+if (window.visualViewport){
+  window.visualViewport.addEventListener('resize', keepNoInView);
+  window.visualViewport.addEventListener('scroll', keepNoInView);
+}
+
+noBtn.addEventListener('mouseenter', moveNo);
+noBtn.addEventListener('click', e => { e.preventDefault(); moveNo(); });
+noBtn.addEventListener('touchstart', e => { e.preventDefault(); moveNo(); }, { passive:false });
+
+/* ============================================================
+   4. ПЛАВНАЯ СМЕНА ШАГОВ
+   ============================================================ */
+function swap(fn){
+  card.classList.add('swapping');
+  setTimeout(() => {
+    fn();
+    card.classList.remove('swapping');
+  }, 300);
+}
+
+function shake(){
+  card.animate([
+    { transform:'translateX(0)' },
+    { transform:'translateX(-8px)' },
+    { transform:'translateX(7px)' },
+    { transform:'translateX(-5px)' },
+    { transform:'translateX(3px)' },
+    { transform:'translateX(0)' }
+  ], { duration: 420, easing: 'ease-in-out' });
+}
+
+function burstConfetti(){
+  const items = ['💖','🌸','✨','🎉'];
+  const total = window.innerWidth < 500 ? 18 : 26;
+  for (let i = 0; i < total; i++){
+    const c = document.createElement('span');
+    c.className = 'confetti';
+    c.textContent = items[Math.floor(Math.random()*items.length)];
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.fontSize = (14 + Math.random() * 14) + 'px';
+    c.style.animationDuration = (2.6 + Math.random() * 2) + 's';
+    c.style.animationDelay = (Math.random() * .4) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5200);
+  }
+}
+
+/* ============================================================
+   5. ПЕРЕХОД К ФОРМЕ (используется и при «Да», и при «Уговорил»)
+   ============================================================ */
+function goToForm(){
+  setProgress(1);
+  swap(() => {
+    mascotEmoji.textContent = '🥰';
+    question.textContent = 'Ура! Давай спланируем наше идеальное свидание 🥰';
+    subtitle.textContent = 'Осталось всего три шага ✨';
+    subtitle.style.color = '#a68aa0';
+
+    btnContainer.style.display = 'none';
+    whyBlock.style.display = 'none';
+    detailsForm.style.display = 'block';
+    detailsForm.classList.add('fade-in');
+  });
+  burstConfetti();
+}
+
+yesBtn.addEventListener('click', goToForm);
+
+reconsiderBtn.addEventListener('click', goToForm);
+
+/* ============================================================
+   6. ЭКРАН «ПОЧЕМУ НЕ ХОЧЕШЬ?» — отправка причины
+   ============================================================ */
+sendWhyBtn.addEventListener('click', () => {
+  const reason = whyInput.value.trim();
+  if (!reason){
+    whyInput.style.borderColor = '#ff4d85';
+    whyInput.placeholder = 'Напиши хоть что-нибудь 🥺';
+    shake();
+    return;
+  }
+  sendWhyToTelegram(reason);
+
+  swap(() => {
+    whyBlock.style.display = 'none';
+    mascotEmoji.textContent = '🥺';
+    question.textContent = 'Понял… 💔';
+    subtitle.textContent = 'Спасибо за честность. Если передумаешь — я рядом 💕';
+    subtitle.style.color = '#a68aa0';
+    btnContainer.style.display = 'none';
+  });
+});
+
+/* ============================================================
+   7. ФОРМА
+   ============================================================ */
+(function(){
+  const d = new Date();
+  const today = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  dateInput.min = today;
+})();
+
+/* показать/скрыть поле «Другое» */
+activityInput.addEventListener('change', () => {
+  if (activityInput.value === '__other__'){
+    activityCustom.style.display = 'block';
+    setTimeout(() => activityCustom.focus(), 50);
+  } else {
+    activityCustom.style.display = 'none';
+  }
+});
+
+submitBtn.addEventListener('click', () => {
+  const date = dateInput.value;
+  const time = timeInput.value;
+
+  if (!date || !time){
+    subtitle.textContent = "Не забудь выбрать дату и время 🥺";
+    subtitle.style.color = '#ff4d85';
+    shake();
+    return;
+  }
+
+  /* определяем занятие (если «Другое» — берём из своего поля) */
+  let activity = activityInput.value;
+  if (activity === '__other__'){
+    activity = activityCustom.value.trim();
+    if (!activity){
+      subtitle.textContent = "Напиши, чего бы тебе хотелось 🥺";
+      subtitle.style.color = '#ff4d85';
+      activityCustom.style.borderColor = '#ff4d85';
+      shake();
+      return;
+    }
+    activity = '✏️ ' + activity;
+  }
+
+  const d = new Date(date + 'T00:00:00');
+  const WEEK   = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+  const MONTHS = ['января','февраля','марта','апреля','мая','июня',
+                  'июля','августа','сентября','октября','ноября','декабря'];
+  const pretty  = `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  const weekday = WEEK[d.getDay()];
+
+  sendToTelegram({ activity, pretty, weekday, time });
+
+  setProgress(2);
+  swap(() => {
+    mascotEmoji.textContent = '🎉';
+    question.textContent = 'Идеально! План зафиксирован 🔒';
+    subtitle.textContent = 'Скоро увидимся ❤️';
+    subtitle.style.color = '#a68aa0';
+
+    detailsForm.style.display = 'none';
+
+    finalBlock.style.display = 'block';
+    finalBlock.innerHTML = `
+      <div class="final-text fade-in">
+        <div class="final-title">Наш план ✨</div>
+        <div class="final-row">${activity}</div>
+        <div class="final-row">📅 ${pretty} · ${weekday}</div>
+        <div class="final-row">🕒 ${time}</div>
+        <p class="final-note">Уже начинаю готовиться и очень ждать! ❤️</p>
+      </div>
+    `;
+  });
+  burstConfetti();
+});
+
+/* ============================================================
+   8. ОТПРАВКА В TELEGRAM
+   ============================================================ */
+async function sendToTelegram({activity, pretty, weekday, time}){
+  const { botToken, chatId } = SETTINGS.telegram;
+  if (!botToken || !chatId) {
+    console.log('[Telegram] Не настроен. План свидания:', { activity, pretty, weekday, time });
+    return;
+  }
+
+  const her = SETTINGS.herName ? `💌 ${SETTINGS.herName} согласилась!` : '💌 Она согласилась!';
+  const text =
+`${her}
+
+📅 Дата: ${pretty} (${weekday})
+🕒 Время: ${time}
+✨ Занятие: ${activity}
+
+Скорее пиши ей и подтверждай! 🥳`;
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview:true })
+    });
+    if (!res.ok){
+      const err = await res.text();
+      console.warn('[Telegram] Ошибка:', err);
+    } else {
+      console.log('[Telegram] Уведомление отправлено ✅');
+    }
+  } catch (e){
+    console.warn('[Telegram] Сеть недоступна:', e);
+  }
+}
+
+async function sendWhyToTelegram(reason){
+  const { botToken, chatId } = SETTINGS.telegram;
+  if (!botToken || !chatId) {
+    console.log('[Telegram] Причина «Нет»:', reason);
+    return;
+  }
+
+  const text =
+`😢 Она несколько раз нажала «Нет» и объяснила причину:
+
+«${reason}»
+
+Попробуй поговорить с ней 💬`;
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview:true })
+    });
+    if (!res.ok){
+      const err = await res.text();
+      console.warn('[Telegram] Ошибка:', err);
+    } else {
+      console.log('[Telegram] Причина отправлена ✅');
+    }
+  } catch (e){
+    console.warn('[Telegram] Сеть недоступна:', e);
+  }
+}
+</script>
+</body>
+</html>
