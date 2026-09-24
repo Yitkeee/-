@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<script>(function(){function fmt(a){if(a instanceof Error)return a.message;if(typeof a==="object"&&a!==null){try{return JSON.stringify(a)}catch(e){return String(a)}}return String(a)}function send(t,m,l){try{parent.postMessage({__stc:1,type:t,msg:m,line:l},"*")}catch(e){}}["log","info","warn","error"].forEach(function(m){var o=console[m];console[m]=function(){send(m,Array.prototype.map.call(arguments,fmt).join(" "));if(o)o.apply(console,arguments)}});window.addEventListener("error",function(e){send("error",e.message,e.lineno)});window.addEventListener("unhandledrejection",function(e){send("error","Promise: "+fmt(e.reason))});})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Приглашение 💌</title>
@@ -154,7 +153,6 @@ button{
 }
 #noBtn:hover{background:#ff4d85;}
 
-/* ---------- экран «Почему не хочешь?» ---------- */
 .why-block{display:none;text-align:left;}
 .why-block h2{
   color:var(--pink-dark);font-size:17px;text-align:center;
@@ -188,7 +186,6 @@ button{
 }
 #reconsider:hover{background:var(--pink-soft);}
 
-/* ---------- форма ---------- */
 .details-form{display:none;text-align:left;}
 .details-form label{
   display:block;font-weight:600;color:#8a7290;
@@ -316,7 +313,6 @@ button{
     <button id="noBtn">Нет</button>
   </div>
 
-  <!-- Экран «Почему не хочешь?» -->
   <div class="why-block" id="whyBlock">
     <h2>Почему не хочешь? 🥺</h2>
     <p>Расскажи честно — мне правда важно понять 💭</p>
@@ -361,7 +357,8 @@ const SETTINGS = {
   telegram: {
     botToken: "8811712313:AAEA0VhxTqImCh3ZCEa01P2w3bCSO8aqqmU",
     chatId:   "5635623522"
-  }
+  },
+  trackVisits: true   // ← true — отслеживать заходы, false — выключить
 };
 
 /* ============================================================
@@ -441,7 +438,6 @@ function spawnClickHeart(x, y){
 
 /* ============================================================
    3. КНОПКА «НЕТ», КОТОРАЯ УБЕГАЕТ
-   После 5 попыток → экран «Почему не хочешь?»
    ============================================================ */
 const NO_TEXTS = ["Нет", "Точно нет?", "Подумай 🥺", "Ну пожалуйста…", "Уверена?", "Я старался 😢"];
 const MAX_NO = 5;
@@ -463,7 +459,6 @@ function moveNo(){
   if (noLocked) return;
   noCount++;
 
-  /* после MAX_NO попыток → показываем экран «Почему не хочешь?» */
   if (noCount >= MAX_NO){
     noLocked = true;
     noBtn.style.opacity = '0';
@@ -591,7 +586,7 @@ function burstConfetti(){
 }
 
 /* ============================================================
-   5. ПЕРЕХОД К ФОРМЕ (используется и при «Да», и при «Уговорил»)
+   5. ПЕРЕХОД К ФОРМЕ
    ============================================================ */
 function goToForm(){
   setProgress(1);
@@ -610,11 +605,10 @@ function goToForm(){
 }
 
 yesBtn.addEventListener('click', goToForm);
-
 reconsiderBtn.addEventListener('click', goToForm);
 
 /* ============================================================
-   6. ЭКРАН «ПОЧЕМУ НЕ ХОЧЕШЬ?» — отправка причины
+   6. ЭКРАН «ПОЧЕМУ НЕ ХОЧЕШЬ?»
    ============================================================ */
 sendWhyBtn.addEventListener('click', () => {
   const reason = whyInput.value.trim();
@@ -645,7 +639,6 @@ sendWhyBtn.addEventListener('click', () => {
   dateInput.min = today;
 })();
 
-/* показать/скрыть поле «Другое» */
 activityInput.addEventListener('change', () => {
   if (activityInput.value === '__other__'){
     activityCustom.style.display = 'block';
@@ -666,7 +659,6 @@ submitBtn.addEventListener('click', () => {
     return;
   }
 
-  /* определяем занятие (если «Другое» — берём из своего поля) */
   let activity = activityInput.value;
   if (activity === '__other__'){
     activity = activityCustom.value.trim();
@@ -779,6 +771,107 @@ async function sendWhyToTelegram(reason){
     console.warn('[Telegram] Сеть недоступна:', e);
   }
 }
+
+/* ============================================================
+   9. ОТСЛЕЖИВАНИЕ ЗАХОДОВ (двойной фолбэк + без защиты)
+   ============================================================ */
+async function getIpInfo(){
+  /* пробуем ipwho.is */
+  try {
+    const r = await fetch('https://ipwho.is/');
+    const d = await r.json();
+    if (d && d.success !== false) {
+      return {
+        ip: d.ip,
+        city: d.city,
+        region: d.region,
+        country: d.country,
+        isp: d.connection && d.connection.isp,
+        tz: d.timezone && d.timezone.id
+      };
+    }
+  } catch(e){ /* молча идём дальше */ }
+
+  /* пробуем ipapi.co */
+  try {
+    const r = await fetch('https://ipapi.co/json/');
+    const d = await r.json();
+    return {
+      ip: d.ip,
+      city: d.city,
+      region: d.region,
+      country: d.country_name,
+      isp: d.org,
+      tz: d.timezone
+    };
+  } catch(e){ /* молча идём дальше */ }
+
+  /* пробуем ip-api.com */
+  try {
+    const r = await fetch('http://ip-api.com/json/?fields=status,country,city,regionName,isp,timezone,query');
+    const d = await r.json();
+    if (d && d.status === 'success') {
+      return {
+        ip: d.query,
+        city: d.city,
+        region: d.regionName,
+        country: d.country,
+        isp: d.isp,
+        tz: d.timezone
+      };
+    }
+  } catch(e){ /* молча идём дальше */ }
+
+  return null;
+}
+
+async function trackVisit(){
+  if (!SETTINGS.trackVisits) return;
+  if (!SETTINGS.telegram.botToken || !SETTINGS.telegram.chatId) return;
+
+  const info = await getIpInfo();
+
+  const isFirstTime = !localStorage.getItem('hasVisitedBefore');
+  if (isFirstTime) localStorage.setItem('hasVisitedBefore', '1');
+
+  let text = '👀 Новый заход на сайт!\n\n';
+  if (info) {
+    text +=
+`🆔 IP: ${info.ip || '—'}
+🌍 Город: ${info.city || '—'}, ${info.region || '—'}
+🇷🇺 Страна: ${info.country || '—'}
+🏢 Провайдер: ${info.isp || '—'}
+📱 Часовой пояс: ${info.tz || '—'}
+`;
+  } else {
+    text += '⚠️ Не удалось определить IP/геоданные\n';
+  }
+  text +=
+`${isFirstTime ? '🆕 Первый заход!' : '🔁 Уже заходила раньше'}
+🕒 ${new Date().toLocaleString('ru-RU')}`;
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${SETTINGS.telegram.botToken}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        chat_id: SETTINGS.telegram.chatId,
+        text,
+        disable_web_page_preview: true
+      })
+    });
+    if (!res.ok){
+      const err = await res.text();
+      console.warn('[Track] Ошибка Telegram:', err);
+    } else {
+      console.log('[Track] Уведомление о заходе отправлено ✅');
+    }
+  } catch(e){
+    console.warn('[Track] Сеть недоступна:', e);
+  }
+}
+
+trackVisit();
 </script>
 </body>
 </html>
